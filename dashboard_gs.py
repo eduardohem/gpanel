@@ -37,7 +37,7 @@ os.system('chmod 600 ~/.ssh/id_rsa')
 os.system('chmod 700 ~/.ssh')
 os.system('ssh-keyscan github.com >> ~/.ssh/known_hosts')
 
-# 🚀 Adicionar fingerprint do GitHub aos hosts conhecidos (known_hosts)
+# Adicionar fingerprint do GitHub aos hosts conhecidos (known_hosts)
 os.system('ssh-keyscan -H github.com >> ~/.ssh/known_hosts')
 
 
@@ -46,9 +46,12 @@ if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
 else:
     st.success("✅ Chave SSH criada com sucesso.")
 
-# ✅ Adicionar a chave no agente SSH
-os.system('eval $(ssh-agent -s)')
+# Reiniciar o agente SSH (resolve problema de "Could not open a connection")
+os.system("pkill ssh-agent")
+os.system("eval $(ssh-agent -s)")
 response = os.system(f'ssh-add {private_key_path}')
+
+# Verifica se o agente carregou a chave corretamente
 if response == 0:
     st.success("✅ Chave SSH carregada no agente com sucesso!")
 else:
