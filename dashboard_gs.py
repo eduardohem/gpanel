@@ -46,17 +46,18 @@ if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
 else:
     st.success("✅ Chave SSH criada com sucesso.")
 
-# Reiniciar o agente SSH (resolve problema de "Could not open a connection")
-os.system("pkill ssh-agent")
-os.system("eval $(ssh-agent -s)")
-response = os.system(f'ssh-add {private_key_path}')
+# 🔄 Inicia o agente SSH
+start_agent = os.popen("eval $(ssh-agent -s)").read()
+st.write(f"Agente SSH iniciado: {start_agent}")
 
-# Verifica se o agente carregou a chave corretamente
+# 🔄 Adiciona a chave ao agente
+response = os.system(f'ssh-add {private_key_path}')
 if response == 0:
     st.success("✅ Chave SSH carregada no agente com sucesso!")
 else:
     st.error("❌ Erro ao carregar a chave SSH no agente.")
 
+# 🌐 Testar conexão com o GitHub
 response = os.system('ssh -T git@github.com')
 if response == 0:
     st.success("✅ Conexão SSH com GitHub está funcionando.")
@@ -74,14 +75,6 @@ if response == 0:
     st.success("✅ Repositório clonado com sucesso!")
 else:
     st.error("❌ Falha ao clonar o repositório. Verifique permissões.")
-
-if os.path.exists("gpanel"):
-    try:
-        with open("gpanel/test_write.txt", "w") as f:
-            f.write("Teste de escrita bem-sucedido.")
-        st.success("✅ Permissão de escrita confirmada!")
-    except Exception as e:
-        st.error(f"❌ Sem permissão de escrita: {e}")
 
 
 # Recarrega a cada n minutos (300.000 ms)
