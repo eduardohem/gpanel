@@ -32,6 +32,7 @@ with open(os.path.expanduser('~/.ssh/id_rsa'), 'w') as file:
 
 # Define permissões corretas
 os.system('chmod 600 ~/.ssh/id_rsa')
+os.system('chmod 700 ~/.ssh')
 os.system('ssh-keyscan github.com >> ~/.ssh/known_hosts')
 
 if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
@@ -39,17 +40,18 @@ if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
 else:
     st.success("✅ Chave SSH criada com sucesso.")
 
-response = os.system('ssh -T git@github.com')
+response = os.system('ssh -vT git@github.com')
 if response == 0:
     st.success("✅ Conexão SSH com GitHub está funcionando.")
 else:
-    st.error("❌ Erro na conexão SSH com GitHub.")
+    st.error("❌ Erro na conexão SSH com GitHub. Verifique os logs.")
 
 # Clonar o repositório, se necessário
-if not os.path.exists("meu_repositorio_clonado"):
-    os.system('git clone git@github.com:seu-usuario/seu-repositorio.git meu_repositorio_clonado')
+if not os.path.exists("gpanel"):
+    os.system('git clone git@github.com:eduardohem/gpanel.git gpanel')
     st.success("Repositório clonado com sucesso!")
-
+else:
+    st.info("Repositório já existe, não foi necessário clonar.")
 
 # Recarrega a cada n minutos (300.000 ms)
 n = 10
