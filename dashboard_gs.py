@@ -35,6 +35,10 @@ os.system('chmod 600 ~/.ssh/id_rsa')
 os.system('chmod 700 ~/.ssh')
 os.system('ssh-keyscan github.com >> ~/.ssh/known_hosts')
 
+# 🚀 Adicionar fingerprint do GitHub aos hosts conhecidos (known_hosts)
+os.system('ssh-keyscan -H github.com >> ~/.ssh/known_hosts')
+
+
 if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
     st.error("❌ A chave SSH não foi criada corretamente no diretório ~/.ssh/")
 else:
