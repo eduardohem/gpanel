@@ -27,8 +27,9 @@ private_key = st.secrets["ssh"]["private_key"]
 # Cria o diretório SSH se não existir
 os.makedirs(os.path.expanduser('~/.ssh'), exist_ok=True)
 
-# Salva a chave privada no arquivo correto
-with open(os.path.expanduser('~/.ssh/id_rsa'), 'w') as file:
+# 💾 Salva a chave privada no arquivo correto
+private_key_path = os.path.expanduser('~/.ssh/id_rsa')
+with open(private_key_path, 'w') as file:
     file.write(private_key)
 
 # Define permissões corretas
@@ -45,11 +46,19 @@ if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
 else:
     st.success("✅ Chave SSH criada com sucesso.")
 
-response = os.system('ssh -vT git@github.com')
+# ✅ Adicionar a chave no agente SSH
+os.system('eval $(ssh-agent -s)')
+response = os.system(f'ssh-add {private_key_path}')
+if response == 0:
+    st.success("✅ Chave SSH carregada no agente com sucesso!")
+else:
+    st.error("❌ Erro ao carregar a chave SSH no agente.")
+
+response = os.system('ssh -T git@github.com')
 if response == 0:
     st.success("✅ Conexão SSH com GitHub está funcionando.")
 else:
-    st.error("❌ Erro na conexão SSH com GitHub. Verifique os logs.")
+    st.error("❌ Erro na conexão SSH com GitHub. Verifique permissões e Deploy Key.")
 
 # Verifica se o diretório existe
 if os.path.exists("gpanel"):
