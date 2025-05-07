@@ -17,6 +17,7 @@ import json
 from io import BytesIO
 from PIL import Image
 import pytz
+import shutil
 
 st.set_page_config(page_title="Dashboard", layout="wide")
 
@@ -50,12 +51,26 @@ if response == 0:
 else:
     st.error("❌ Erro na conexão SSH com GitHub. Verifique os logs.")
 
-# Clonar o repositório, se necessário
-if not os.path.exists("gpanel"):
-    os.system('git clone git@github.com:eduardohem/gpanel.git gpanel')
-    st.success("Repositório clonado com sucesso!")
+# Verifica se o diretório existe
+if os.path.exists("gpanel"):
+    st.info("📁 Removendo repositório antigo para forçar um clone novo.")
+    shutil.rmtree("gpanel")
+
+# Clona novamente
+response = os.system('git clone --progress --verbose git@github.com:eduardohem/gpanel.git gpanel')
+if response == 0:
+    st.success("✅ Repositório clonado com sucesso!")
 else:
-    st.info("Repositório já existe, não foi necessário clonar.")
+    st.error("❌ Falha ao clonar o repositório. Verifique permissões.")
+
+if os.path.exists("gpanel"):
+    try:
+        with open("gpanel/test_write.txt", "w") as f:
+            f.write("Teste de escrita bem-sucedido.")
+        st.success("✅ Permissão de escrita confirmada!")
+    except Exception as e:
+        st.error(f"❌ Sem permissão de escrita: {e}")
+
 
 # Recarrega a cada n minutos (300.000 ms)
 n = 10
