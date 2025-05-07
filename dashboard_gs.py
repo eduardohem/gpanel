@@ -20,11 +20,10 @@ import pytz
 import stat
 import shutil
 
-
-# 🚀 Configuração da Página
+# 🚀 Configurações iniciais do Streamlit
 st.set_page_config(page_title="Dashboard", layout="wide")
 
-# 🔐 Pega a chave privada do secrets
+# 📌 Pega a chave privada do secrets
 private_key = st.secrets["ssh"]["private_key"]
 
 # 📂 Cria o diretório SSH se não existir
@@ -40,10 +39,10 @@ os.system('chmod 600 ~/.ssh/id_rsa')
 os.system('chmod 700 ~/.ssh')
 os.system('ssh-keyscan github.com >> ~/.ssh/known_hosts')
 
-# 🔄 Adicionar fingerprint do GitHub aos hosts conhecidos
+# ➕ Adicionar fingerprint do GitHub aos hosts conhecidos
 os.system('ssh-keyscan -H github.com >> ~/.ssh/known_hosts')
 
-# 🚀 Verificação da criação da chave
+# ✅ Verifica se a chave existe
 if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
     st.error("❌ A chave SSH não foi criada corretamente no diretório ~/.ssh/")
 else:
@@ -65,15 +64,16 @@ for line in agent_lines:
         os.environ["SSH_AGENT_PID"] = pid
         st.write(f"🔗 SSH_AGENT_PID definido: {pid}")
 
-# 🔓 Adiciona a chave ao agente
+# ➕ Adiciona a chave ao agente
 response = os.system(f'ssh-add ~/.ssh/id_rsa')
 if response == 0:
     st.success("✅ Chave SSH carregada no agente com sucesso!")
 else:
     st.error("❌ Erro ao carregar a chave SSH no agente.")
 
-# 🔄 Testando conexão SSH com GitHub...
+# 🌐 Testar conexão com o GitHub usando o agente SSH
 st.write("🔄 Testando conexão SSH com GitHub...")
+os.system('ssh-keyscan -H github.com >> ~/.ssh/known_hosts')
 response = os.system(f'ssh -o StrictHostKeyChecking=no -T git@github.com')
 if response == 0:
     st.success("✅ Conexão SSH com GitHub está funcionando.")
@@ -82,27 +82,15 @@ else:
     st.write("🔍 **Log Detalhado:**")
     st.write(os.popen("ssh -vT git@github.com").read())
 
-# 🔍 Chaves carregadas no agente:
+# 🔍 Verificar as chaves carregadas no agente:
 st.write("🔍 Chaves carregadas no agente:")
 st.write(os.popen("ssh-add -l").read())
 
-# 🔍 Verificando socket do SSH_AGENT:
+# 🔍 Verificar se o socket existe:
 st.write("🔍 Verificando socket do SSH_AGENT:")
 st.write(os.popen('ls -l $SSH_AUTH_SOCK').read())
 
-# 🔄 Adicionar configuração no SSH para garantir o IdentityFile correto
-config_path = os.path.expanduser('~/.ssh/config')
-with open(config_path, 'w') as file:
-    file.write("""
-Host github.com
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa
-    StrictHostKeyChecking no
-""")
-
-os.system('chmod 600 ~/.ssh/config')
-
+# 🔄 Função para tentar remover permissões de leitura se necessário
 def remove_readonly(func, path, _):
     """ Tenta remover a permissão de somente leitura e apaga o arquivo. """
     os.chmod(path, stat.S_IWRITE)
@@ -118,7 +106,6 @@ if os.path.exists("gpanel"):
         st.error(f"❌ Falha ao remover o repositório: {e}")
 
 # 🔄 Clona novamente
-st.write("🔄 Clonando repositório privado do GitHub...")
 response = os.system('git clone --progress --verbose git@github.com:eduardohem/gpanel.git gpanel')
 if response == 0:
     st.success("✅ Repositório clonado com sucesso!")
@@ -133,7 +120,6 @@ if os.path.exists("gpanel"):
         st.success("✅ Permissão de escrita confirmada!")
     except Exception as e:
         st.error(f"❌ Sem permissão de escrita: {e}")
-
 
 
 
