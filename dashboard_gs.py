@@ -574,3 +574,13 @@ if st.button("🧹 Limpar cache Streamlit"):
     st.success("Cache limpo com sucesso!")
 
 
+# Botão para forçar o git pull
+if st.button("🔄 Atualizar Código"):
+    with st.spinner("Atualizando código..."):
+        response = os.system("cd gpanel && git pull")
+        if response == 0:
+            st.success("✅ Código atualizado com sucesso!")
+        else:
+            st.error("❌ Falha ao atualizar o código. Verifique o log.")
+
+
