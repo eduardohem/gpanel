@@ -47,8 +47,8 @@ def atualizar_codigo():
         st.error("❌ Falha ao atualizar o código. Verifique o log para mais detalhes.")
 
 
-# Botão para atualizar o código
-if st.button("Atualizar Código"):
+# Botão para atualizar o código (com key única)
+if st.button("Atualizar Código", key="botao_atualizar_codigo"):
     atualizar_codigo()
 
 # st.set_page_config(page_title="Dashboard", layout="wide")
