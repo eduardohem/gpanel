@@ -563,10 +563,10 @@ widget_html = """
 st.components.v1.html(widget_html, height=650)
 
 # Botão para limpar todos os caches do Streamlit
-if st.button("🧹 Limpar Cache streamlit"):
+if st.button("🧹 Limpar cache do streamlit"):
     st.cache_data.clear()       # limpa @st.cache_data
     st.cache_resource.clear()   # limpa @st.cache_resource
-    st.success("Cache limpo com sucesso!")
+    st.success("Cache limpo com sucesso.")
 
 
 def atualizar_codigo():
@@ -582,7 +582,6 @@ def atualizar_codigo():
         st.experimental_rerun()
     else:
         st.error("❌ Falha ao atualizar o código. Verifique o log para mais detalhes.")
-
 
 # Botão para atualizar o código
 if st.button("Atualizar Código"):
