@@ -18,6 +18,8 @@ from io import BytesIO
 from PIL import Image
 import pytz
 
+st.set_page_config(page_title="Dashboard", layout="wide")
+
 # Pega a chave privada do secrets
 private_key = st.secrets["ssh"]["private_key"]
 
@@ -32,6 +34,11 @@ with open(os.path.expanduser('~/.ssh/id_rsa'), 'w') as file:
 os.system('chmod 600 ~/.ssh/id_rsa')
 os.system('ssh-keyscan github.com >> ~/.ssh/known_hosts')
 
+if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
+    st.error("❌ A chave SSH não foi criada corretamente no diretório ~/.ssh/")
+else:
+    st.success("✅ Chave SSH criada com sucesso.")
+
 response = os.system('ssh -T git@github.com')
 if response == 0:
     st.success("✅ Conexão SSH com GitHub está funcionando.")
@@ -43,8 +50,6 @@ if not os.path.exists("meu_repositorio_clonado"):
     os.system('git clone git@github.com:seu-usuario/seu-repositorio.git meu_repositorio_clonado')
     st.success("Repositório clonado com sucesso!")
 
-
-st.set_page_config(page_title="Dashboard", layout="wide")
 
 # Recarrega a cada n minutos (300.000 ms)
 n = 10
