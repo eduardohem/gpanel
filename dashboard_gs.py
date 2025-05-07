@@ -22,10 +22,6 @@ import shutil
 import importlib
 import dashboard_gs  # O módulo principal do seu app
 
-import streamlit as st
-import os
-import importlib
-
 # ✅ Verifica e configura a página antes de qualquer coisa
 if 'page_configured' not in st.session_state:
     st.set_page_config(page_title="Dashboard", layout="wide")
@@ -55,7 +51,7 @@ def atualizar_codigo():
 if st.button("Atualizar Código"):
     atualizar_codigo()
 
-st.set_page_config(page_title="Dashboard", layout="wide")
+# st.set_page_config(page_title="Dashboard", layout="wide")
 
 # Pega a chave privada do secrets
 private_key = st.secrets["ssh"]["private_key"]
