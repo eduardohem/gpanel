@@ -22,10 +22,15 @@ import shutil
 import importlib
 import dashboard_gs  # O módulo principal do seu app
 
+
 # ✅ Verifica e configura a página antes de qualquer coisa
 if 'page_configured' not in st.session_state:
     st.set_page_config(page_title="Dashboard", layout="wide")
     st.session_state['page_configured'] = True
+
+# ✅ Verifica se o botão já foi criado para evitar duplicidade
+if 'botao_atualizar_criado' not in st.session_state:
+    st.session_state['botao_atualizar_criado'] = False
 
 
 # 🔄 Função para atualizar o repositório
@@ -47,9 +52,11 @@ def atualizar_codigo():
         st.error("❌ Falha ao atualizar o código. Verifique o log para mais detalhes.")
 
 
-# Botão para atualizar o código (com key única)
-if st.button("Atualizar Código", key="botao_atualizar_codigo"):
-    atualizar_codigo()
+# ✅ Cria o botão somente se ainda não foi criado
+if not st.session_state['botao_atualizar_criado']:
+    if st.button("Atualizar Código", key="botao_atualizar_codigo"):
+        atualizar_codigo()
+    st.session_state['botao_atualizar_criado'] = True
 
 # st.set_page_config(page_title="Dashboard", layout="wide")
 
