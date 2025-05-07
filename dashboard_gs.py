@@ -20,7 +20,7 @@ import pytz
 import stat
 import shutil
 import importlib
-import dashboard_gs  # O módulo principal do seu app
+# import dashboard_gs  # O módulo principal do seu app
 
 st.set_page_config(page_title="Dashboard", layout="wide")
 
@@ -567,7 +567,6 @@ if st.button("🧹 Limpar cache do streamlit"):
     st.cache_data.clear()       # limpa @st.cache_data
     st.cache_resource.clear()   # limpa @st.cache_resource
     st.success("Cache limpo com sucesso.")
-
 
 def atualizar_codigo():
     # Executa o git pull para atualizar o repositório
