@@ -24,29 +24,33 @@ st.set_page_config(page_title="Dashboard", layout="wide")
 # Pega a chave privada do secrets
 private_key = st.secrets["ssh"]["private_key"]
 
-# Cria o diretório SSH se não existir
-os.makedirs(os.path.expanduser('~/.ssh'), exist_ok=True)
+# Caminhos necessários
+ssh_dir = os.path.expanduser('~/.ssh')
+private_key_path = os.path.join(ssh_dir, 'id_rsa')
+known_hosts_path = os.path.join(ssh_dir, 'known_hosts')
+
+# 🔄 Criação do diretório ~/.ssh
+os.makedirs(ssh_dir, exist_ok=True)
 
 # 💾 Salva a chave privada no arquivo correto
-private_key_path = os.path.expanduser('~/.ssh/id_rsa')
 with open(private_key_path, 'w') as file:
     file.write(private_key)
 
-# Define permissões corretas
-os.system('chmod 600 ~/.ssh/id_rsa')
-os.system('chmod 700 ~/.ssh')
-os.system('ssh-keyscan github.com >> ~/.ssh/known_hosts')
+# 🔒 Permissões corretas
+os.chmod(private_key_path, 0o600)
+os.chmod(ssh_dir, 0o700)
 
-# Adicionar fingerprint do GitHub aos hosts conhecidos (known_hosts)
-os.system('ssh-keyscan -H github.com >> ~/.ssh/known_hosts')
+# 🌐 Adicionar fingerprint do GitHub aos hosts conhecidos (known_hosts)
+os.system(f'ssh-keyscan -H github.com >> {known_hosts_path}')
 
-
-if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
+# ✅ Verificação da criação da chave
+if not os.path.exists(private_key_path):
     st.error("❌ A chave SSH não foi criada corretamente no diretório ~/.ssh/")
 else:
     st.success("✅ Chave SSH criada com sucesso.")
 
 # 🔄 Inicia o agente SSH explicitamente
+st.write("🔄 Iniciando agente SSH...")
 start_agent = os.popen("ssh-agent -s").read()
 st.write(f"🔄 Agente SSH iniciado:\n{start_agent}")
 
@@ -62,31 +66,54 @@ for line in agent_lines:
         os.environ["SSH_AGENT_PID"] = pid
         st.write(f"🔗 SSH_AGENT_PID definido: {pid}")
 
-# Adiciona a chave ao agente
-response = os.system(f'ssh-add ~/.ssh/id_rsa')
+# ✅ Adicionar chave ao agente
+response = os.system(f'ssh-add {private_key_path}')
 if response == 0:
     st.success("✅ Chave SSH carregada no agente com sucesso!")
 else:
     st.error("❌ Erro ao carregar a chave SSH no agente.")
 
-# 🌐 Testar conexão com o GitHub
-response = os.system('ssh -T git@github.com')
-if response == 0:
+# 🌐 Testar conexão com o GitHub usando o agente SSH
+st.write("🔄 Testando conexão SSH com GitHub...")
+
+# 🗝️ Verifica a conexão
+connection_test = os.popen("ssh -o StrictHostKeyChecking=no -T git@github.com 2>&1").read()
+if "successfully authenticated" in connection_test:
     st.success("✅ Conexão SSH com GitHub está funcionando.")
 else:
     st.error("❌ Erro na conexão SSH com GitHub. Verifique permissões e Deploy Key.")
+    st.write("🔍 **Log Detalhado:**")
+    st.write(connection_test)
 
-# Verifica se o diretório existe
+# 🔎 Verificar as chaves carregadas no agente
+st.write("🔍 Chaves carregadas no agente:")
+st.write(os.popen("ssh-add -l").read())
+
+# 🔎 Verificar se o socket existe
+st.write("🔍 Verificando socket do SSH_AGENT:")
+st.write(os.popen('ls -l $SSH_AUTH_SOCK').read())
+
+# 🔄 Verifica se o diretório existe para fazer clone limpo
 if os.path.exists("gpanel"):
     st.info("📁 Removendo repositório antigo para forçar um clone novo.")
     shutil.rmtree("gpanel")
 
-# Clona novamente
+# 🔄 Clona novamente o repositório
 response = os.system('git clone --progress --verbose git@github.com:eduardohem/gpanel.git gpanel')
 if response == 0:
     st.success("✅ Repositório clonado com sucesso!")
 else:
     st.error("❌ Falha ao clonar o repositório. Verifique permissões.")
+
+# ✅ Teste de escrita no repositório clonado
+if os.path.exists("gpanel"):
+    try:
+        with open("gpanel/test_write.txt", "w") as f:
+            f.write("Teste de escrita bem-sucedido.")
+        st.success("✅ Permissão de escrita confirmada!")
+    except Exception as e:
+        st.error(f"❌ Sem permissão de escrita: {e}")
+
 
 
 # Recarrega a cada n minutos (300.000 ms)
