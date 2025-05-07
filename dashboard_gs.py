@@ -17,6 +17,8 @@ import json
 from io import BytesIO
 from PIL import Image
 import pytz
+import stat
+import shutil
 
 
 # 🚀 Configuração da Página
@@ -101,10 +103,19 @@ Host github.com
 
 os.system('chmod 600 ~/.ssh/config')
 
+def remove_readonly(func, path, _):
+    """ Tenta remover a permissão de somente leitura e apaga o arquivo. """
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
+
 # 🚀 Verifica se o diretório existe
 if os.path.exists("gpanel"):
     st.info("📁 Removendo repositório antigo para forçar um clone novo.")
-    shutil.rmtree("gpanel")
+    try:
+        shutil.rmtree("gpanel", onerror=remove_readonly)
+        st.success("✅ Repositório removido com sucesso.")
+    except Exception as e:
+        st.error(f"❌ Falha ao remover o repositório: {e}")
 
 # 🔄 Clona novamente
 st.write("🔄 Clonando repositório privado do GitHub...")
