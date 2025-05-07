@@ -46,9 +46,21 @@ if not os.path.exists(os.path.expanduser('~/.ssh/id_rsa')):
 else:
     st.success("✅ Chave SSH criada com sucesso.")
 
-# 🔄 Inicia o agente SSH
-start_agent = os.popen("eval $(ssh-agent -s)").read()
-st.write(f"Agente SSH iniciado: {start_agent}")
+# 🔄 Inicia o agente SSH explicitamente
+start_agent = os.popen("ssh-agent -s").read()
+st.write(f"🔄 Agente SSH iniciado:\n{start_agent}")
+
+# 🗝️ Extraímos o PID e o socket manualmente:
+agent_lines = start_agent.split("\n")
+for line in agent_lines:
+    if "SSH_AUTH_SOCK" in line:
+        sock = line.split(";")[0].replace("SSH_AUTH_SOCK=", "")
+        os.environ["SSH_AUTH_SOCK"] = sock
+        st.write(f"🔗 SSH_AUTH_SOCK definido: {sock}")
+    elif "SSH_AGENT_PID" in line:
+        pid = line.split(";")[0].replace("SSH_AGENT_PID=", "")
+        os.environ["SSH_AGENT_PID"] = pid
+        st.write(f"🔗 SSH_AGENT_PID definido: {pid}")
 
 # Adiciona a chave ao agente
 response = os.system(f'ssh-add ~/.ssh/id_rsa')
