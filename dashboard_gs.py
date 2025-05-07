@@ -51,7 +51,7 @@ start_agent = os.popen("eval $(ssh-agent -s)").read()
 st.write(f"Agente SSH iniciado: {start_agent}")
 
 # 🔄 Adiciona a chave ao agente
-response = os.system(f'ssh-add {private_key_path}')
+response = os.system(f'ssh-add')
 if response == 0:
     st.success("✅ Chave SSH carregada no agente com sucesso!")
 else:
