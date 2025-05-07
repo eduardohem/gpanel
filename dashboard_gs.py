@@ -18,6 +18,32 @@ from io import BytesIO
 from PIL import Image
 import pytz
 
+# Pega a chave privada do secrets
+private_key = st.secrets["ssh"]["private_key"]
+
+# Cria o diretório SSH se não existir
+os.makedirs(os.path.expanduser('~/.ssh'), exist_ok=True)
+
+# Salva a chave privada no arquivo correto
+with open(os.path.expanduser('~/.ssh/id_rsa'), 'w') as file:
+    file.write(private_key)
+
+# Define permissões corretas
+os.system('chmod 600 ~/.ssh/id_rsa')
+os.system('ssh-keyscan github.com >> ~/.ssh/known_hosts')
+
+response = os.system('ssh -T git@github.com')
+if response == 0:
+    st.success("✅ Conexão SSH com GitHub está funcionando.")
+else:
+    st.error("❌ Erro na conexão SSH com GitHub.")
+
+# Clonar o repositório, se necessário
+if not os.path.exists("meu_repositorio_clonado"):
+    os.system('git clone git@github.com:seu-usuario/seu-repositorio.git meu_repositorio_clonado')
+    st.success("Repositório clonado com sucesso!")
+
+
 st.set_page_config(page_title="Dashboard", layout="wide")
 
 # Recarrega a cada n minutos (300.000 ms)
