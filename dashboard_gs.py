@@ -602,7 +602,7 @@ widget_html = """
 st.components.v1.html(widget_html, height=650)
 
 # Botão para limpar todos os caches do Streamlit
-if st.button("🧹 Limpar cache do streamlit ;)", key="botao_limpar_cache"):
+if st.button("🧹 Limpar cache do streamlit...", key="botao_limpar_cache"):
     st.cache_data.clear()       # limpa @st.cache_data
     st.cache_resource.clear()   # limpa @st.cache_resource
     st.success("Cache limpo com sucesso.")
