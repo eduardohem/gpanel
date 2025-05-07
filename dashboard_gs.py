@@ -20,7 +20,40 @@ import pytz
 import stat
 import shutil
 import importlib
-# import dashboard_gs  # O módulo principal do seu app
+import dashboard_gs  # O módulo principal do seu app
+
+import streamlit as st
+import os
+import importlib
+
+# ✅ Verifica e configura a página antes de qualquer coisa
+if 'page_configured' not in st.session_state:
+    st.set_page_config(page_title="Dashboard", layout="wide")
+    st.session_state['page_configured'] = True
+
+
+# 🔄 Função para atualizar o repositório
+def atualizar_codigo():
+    # Executa o git pull para atualizar o repositório
+    resultado = os.system("cd gpanel && git pull")
+
+    if resultado == 0:
+        st.success("✅ Código atualizado com sucesso!")
+
+        # Recarregar o módulo principal do Streamlit para refletir as mudanças
+        try:
+            import dashboard_gs
+            importlib.reload(dashboard_gs)
+            st.experimental_rerun()
+        except Exception as e:
+            st.error(f"Erro ao recarregar o módulo: {e}")
+    else:
+        st.error("❌ Falha ao atualizar o código. Verifique o log para mais detalhes.")
+
+
+# Botão para atualizar o código
+if st.button("Atualizar Código"):
+    atualizar_codigo()
 
 st.set_page_config(page_title="Dashboard", layout="wide")
 
@@ -568,21 +601,5 @@ if st.button("🧹 Limpar cache do streamlit"):
     st.cache_resource.clear()   # limpa @st.cache_resource
     st.success("Cache limpo com sucesso.")
 
-def atualizar_codigo():
-    # Executa o git pull para atualizar o repositório
-    resultado = os.system("cd gpanel && git pull")
 
-    if resultado == 0:
-        st.success("✅ Código atualizado com sucesso!")
-
-        # Recarregar o módulo principal do Streamlit para refletir as mudanças
-        import dashboard_gs  # Import dinâmico para evitar erro de referência cíclica
-        importlib.reload(dashboard_gs)
-        st.experimental_rerun()
-    else:
-        st.error("❌ Falha ao atualizar o código. Verifique o log para mais detalhes.")
-
-# Botão para atualizar o código
-if st.button("Atualizar Código"):
-    atualizar_codigo()
 
