@@ -297,7 +297,7 @@ else:
 n1, n2, n3 = 62, 70, 75  # níveis de RSI para venda
 fg_threshold = 75  # nível de F&G para reforçar o sinal mais forte
 
-if rsi_val > n3 and fear_val[0] >= fg_threshold:
+if rsi_val > n3 and int(fear_val[0]) >= fg_threshold:
     st.error(f"🚨 RSI > {n3} → Venda 15% da posição  |  F&G: {fear_val[0]} ({fear_cls[0]})")
 elif rsi_val > n2:
     st.warning(f"⚠️ RSI > {n2} → Venda 10% da posição  |  F&G: {fear_val[0]} ({fear_cls[0]})")
