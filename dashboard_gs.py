@@ -174,7 +174,7 @@ widget_html = """
   <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
   {
     "width": "100%",
-    "height": 600,
+    "height": 550,
     "symbolsGroups": [
       {
         "name": "Indices",
@@ -203,7 +203,7 @@ widget_html = """
 </div>
 <!-- TradingView Widget END -->
 """
-st.components.v1.html(widget_html, height=400)
+st.components.v1.html(widget_html, height=450)
 
 # divisória horizontal
 st.markdown("""
