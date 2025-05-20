@@ -162,7 +162,8 @@ st.markdown("""
 st.markdown("<h1 style='font-size:25px; font-weight:bold;'>📊 Exterior e commodities</h1>", unsafe_allow_html=True)
 
 # Código do widget watch
-widget_html = """
+height = 550
+widget_html = f"""
 <!-- TradingView Widget BEGIN -->
 <div class="tradingview-widget-container">
   <div class="tradingview-widget-container__widget"></div>
@@ -174,7 +175,7 @@ widget_html = """
   <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
   {
     "width": "100%",
-    "height": 550,
+    "height": {height},
     "symbolsGroups": [
       {
         "name": "Indices",
@@ -203,7 +204,7 @@ widget_html = """
 </div>
 <!-- TradingView Widget END -->
 """
-st.components.v1.html(widget_html, height=450)
+st.components.v1.html(widget_html, height=height-100)
 
 # divisória horizontal
 st.markdown("""
