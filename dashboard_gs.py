@@ -116,7 +116,8 @@ def carregar_dados_da_planilha():
 st.markdown("<h1 style='font-size:25px; font-weight:bold;'>📊 Brasil</h1>", unsafe_allow_html=True)
 
 # Código do widget watch
-widget_html = """
+height_brasil = 300
+widget_html = f"""
 <!-- TradingView Widget BEGIN -->
 <div class="tradingview-widget-container">
   <div class="tradingview-widget-container__widget"></div>
@@ -126,33 +127,34 @@ widget_html = """
     </a>
   </div>
   <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-  {
+  {{
     "width": "100%",
-    "height": 300,
+    "height": {height_brasil},
     "symbolsGroups": [
-      {
+      {{
         "name": "Indices",
         "originalName": "Indices",
         "symbols": [
-          { "name": "FX_IDC:USDBRL", "displayName": "USD / BRL" },
-          { "name": "BMFBOVESPA:PETR4", "displayName": "Petrobras" },
-          { "name": "BMFBOVESPA:BBAS3", "displayName": "Banco do Brasil" },
-          { "name": "BMFBOVESPA:VALE3", "displayName": "Vale" },
-          { "name": "BMFBOVESPA:IBOV", "displayName": "IBOVESPA" }
+          {{ "name": "FX_IDC:USDBRL", "displayName": "USD / BRL" }},
+          {{ "name": "BMFBOVESPA:PETR4", "displayName": "Petrobras" }},
+          {{ "name": "BMFBOVESPA:BBAS3", "displayName": "Banco do Brasil" }},
+          {{ "name": "BMFBOVESPA:VALE3", "displayName": "Vale" }},
+          {{ "name": "BMFBOVESPA:IBOV", "displayName": "IBOVESPA" }}
         ]
-      }
+      }}
     ],
     "showSymbolLogo": true,
     "isTransparent": false,
     "colorTheme": "light",
     "locale": "br",
     "backgroundColor": "#ffffff"
-  }
+  }}
   </script>
 </div>
 <!-- TradingView Widget END -->
 """
-st.components.v1.html(widget_html, height=300)
+
+st.components.v1.html(widget_html, height=height_brasil)
 
 # divisória horizontal
 st.markdown("""
@@ -162,7 +164,7 @@ st.markdown("""
 st.markdown("<h1 style='font-size:25px; font-weight:bold;'>📊 Exterior e commodities</h1>", unsafe_allow_html=True)
 
 # Código do widget watch
-height_exterior = 450
+height_exterior = 480
 widget_html = f"""
 <!-- TradingView Widget BEGIN -->
 <div class="tradingview-widget-container">
@@ -333,14 +335,15 @@ if not df_btc.empty:
             width=220,
             caption="Fear & Greed Index (Alternative.me)")
 
-widget_html = """
+height_stock_bubble = 600
+widget_html = f"""
 <!-- TradingView Widget BEGIN -->
 <div class="tradingview-widget-container" style="width: 100%; height: 600px;">
   <div class="tradingview-widget-container__widget" style="width: 100%; height: 100%;"></div>
   <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-  {
+  {{
     "width": "100%",
-    "height": 600,
+    "height": {height_stock_bubble},
     "symbol": "BINANCE:BTCUSD",
     "interval": "D",
     "timezone": "Etc/UTC",
@@ -349,15 +352,16 @@ widget_html = """
     "locale": "br",
     "allow_symbol_change": true,
     "support_host": "https://www.tradingview.com"
-  }
+  }}
   </script>
 </div>
 <!-- TradingView Widget END -->
 """
 
+
 # Expander com altura compatível (mesmo valor!)
 with st.expander("Ver Gráfico"):
-    st.components.v1.html(widget_html, height=620)  # altura externa um pouco maior
+    st.components.v1.html(widget_html, height=height_stock_bubble+25)  # altura externa um pouco maior
 
 
 # Mostra a hora da última atualização no canto superior direito
