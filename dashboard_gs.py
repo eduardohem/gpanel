@@ -174,7 +174,7 @@ widget_html = """
   <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
   {
     "width": "100%",
-    "height": 500,
+    "height": 550,
     "symbolsGroups": [
       {
         "name": "Indices",
