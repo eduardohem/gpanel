@@ -162,7 +162,7 @@ st.markdown("""
 st.markdown("<h1 style='font-size:25px; font-weight:bold;'>📊 Exterior e commodities</h1>", unsafe_allow_html=True)
 
 # Código do widget watch
-height_exterior = 500
+height_exterior = 450
 widget_html = f"""
 <!-- TradingView Widget BEGIN -->
 <div class="tradingview-widget-container">
