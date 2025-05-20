@@ -173,37 +173,38 @@ widget_html = f"""
     </a>
   </div>
   <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-  {
+  {{
     "width": "100%",
     "height": {height_exterior},
     "symbolsGroups": [
-      {
+      {{
         "name": "Indices",
         "originalName": "Indices",
         "symbols": [
-          { "name": "BINANCE:BTCUSD", "displayName": "BTC / USD" },
-          { "name": "AMEX:SCHD", "displayName": "Schwab US Dividend" }, 
-          { "name": "NASDAQ:QQQ", "displayName": "Invesco QQQ Trust" }, 
-          { "name": "NASDAQ:TLT", "displayName": "Ishares 20+ Year Treasury" },
-          { "name": "AMEX:EWG", "displayName": "Ishares MSCI Germany Index Fund" },
-          { "name": "TVC:GOLD", "displayName": "Ouro (OZ/USD)" },
-          { "name": "BLACKBULL:BRENT", "displayName": "Petróleo (Brent)" },
-          { "name": "TVC:SILVER", "displayName": "Prata (OZ/USD)" },
-          { "name": "CMCMARKETS:EURUSD", "displayName": "EUR / USD" },
-          { "name": "CAPITALCOM:DXY", "displayName": "USD / DXY" }
+          {{ "name": "BINANCE:BTCUSD", "displayName": "BTC / USD" }},
+          {{ "name": "AMEX:SCHD", "displayName": "Schwab US Dividend" }}, 
+          {{ "name": "NASDAQ:QQQ", "displayName": "Invesco QQQ Trust" }}, 
+          {{ "name": "NASDAQ:TLT", "displayName": "Ishares 20+ Year Treasury" }},
+          {{ "name": "AMEX:EWG", "displayName": "Ishares MSCI Germany Index Fund" }},
+          {{ "name": "TVC:GOLD", "displayName": "Ouro (OZ/USD)" }},
+          {{ "name": "BLACKBULL:BRENT", "displayName": "Petróleo (Brent)" }},
+          {{ "name": "TVC:SILVER", "displayName": "Prata (OZ/USD)" }},
+          {{ "name": "CMCMARKETS:EURUSD", "displayName": "EUR / USD" }},
+          {{ "name": "CAPITALCOM:DXY", "displayName": "USD / DXY" }}
         ]
-      }
+      }}
     ],
     "showSymbolLogo": true,
     "isTransparent": false,
     "colorTheme": "light",
     "locale": "br",
     "backgroundColor": "#ffffff"
-  }
+  }}
   </script>
 </div>
 <!-- TradingView Widget END -->
 """
+
 st.components.v1.html(widget_html, height=height_exterior)
 
 # divisória horizontal
