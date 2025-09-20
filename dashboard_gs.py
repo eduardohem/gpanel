@@ -187,7 +187,7 @@ widget_html = f"""
           {{ "name": "AMEX:SCHD", "displayName": "Schwab US Dividend" }}, 
           {{ "name": "NASDAQ:QQQ", "displayName": "Invesco QQQ Trust" }}, 
           {{ "name": "NASDAQ:TLT", "displayName": "Ishares 20+ Year Treasury" }},
-          {{ "name": "AMEX:EWG", "displayName": "Ishares MSCI Germany Index Fund" }},
+          {{ "name": "NASDAQ:ACWX", "displayName": "Ishares MSCI ACWI ex US ETF" }},
           {{ "name": "TVC:GOLD", "displayName": "Ouro (OZ/USD)" }},
           {{ "name": "BLACKBULL:BRENT", "displayName": "Petróleo (Brent)" }},
           {{ "name": "TVC:SILVER", "displayName": "Prata (OZ/USD)" }},
