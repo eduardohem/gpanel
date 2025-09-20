@@ -217,7 +217,7 @@ st.markdown("""
 # Função para configurar e exibir AgGrid com altura dinâmica e cabeçalho centralizado
 def configurar_aggrid(df):
 
-    df.columns = ['📜 TÍTULO', '📈 RENTABILIDADE (%)', '💰 PREÇO UNITÁRIO (R$)', '📅 VENCIMENTO']
+    df.columns = ['📜 TÍTULO', '📈 RENTABILIDADE (%)', '💰 INVESTIMENTO MÍNIMO (R$)', '📅 VENCIMENTO']
 
     gb = GridOptionsBuilder.from_dataframe(df)
 
