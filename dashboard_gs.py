@@ -3,7 +3,11 @@ from streamlit_autorefresh import st_autorefresh
 import pandas as pd
 from datetime import datetime, time as dtime
 from ta.momentum import RSIIndicator
+import time
 from st_aggrid import AgGrid, GridOptionsBuilder
+import requests
+import json
+import os
 from apscheduler.schedulers.background import BackgroundScheduler
 import logging
 import gspread
@@ -12,13 +16,9 @@ from gspread.exceptions import SpreadsheetNotFound, WorksheetNotFound
 import json
 from io import BytesIO
 from PIL import Image
-import requests
-import time
 import pytz
 import stat
 import shutil
-import json
-import os
 
 st.set_page_config(page_title="Dashboard", layout="wide")
 
@@ -187,7 +187,7 @@ widget_html = f"""
           {{ "name": "AMEX:SCHD", "displayName": "Schwab US Dividend" }}, 
           {{ "name": "NASDAQ:QQQ", "displayName": "Invesco QQQ Trust" }}, 
           {{ "name": "NASDAQ:TLT", "displayName": "Ishares 20+ Year Treasury" }},
-          {{ "name": "NASDAQ:ACWX", "displayName": "Ishares ACWX ex US ETF" }},
+          {{ "name": "AMEX:EWG", "displayName": "Ishares MSCI Germany Index Fund" }},
           {{ "name": "TVC:GOLD", "displayName": "Ouro (OZ/USD)" }},
           {{ "name": "BLACKBULL:BRENT", "displayName": "Petróleo (Brent)" }},
           {{ "name": "TVC:SILVER", "displayName": "Prata (OZ/USD)" }},
@@ -335,7 +335,7 @@ if not df_btc.empty:
             width=220,
             caption="Fear & Greed Index (Alternative.me)")
 
-height_stock_heatmap = 600
+height_stock_bubble = 600
 widget_html = f"""
 <!-- TradingView Widget BEGIN -->
 <div class="tradingview-widget-container" style="width: 100%; height: 600px;">
@@ -343,7 +343,7 @@ widget_html = f"""
   <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
   {{
     "width": "100%",
-    "height": {height_stock_heatmap},
+    "height": {height_stock_bubble},
     "symbol": "BINANCE:BTCUSD",
     "interval": "D",
     "timezone": "Etc/UTC",
@@ -358,9 +358,10 @@ widget_html = f"""
 <!-- TradingView Widget END -->
 """
 
+
 # Expander com altura compatível (mesmo valor!)
 with st.expander("Ver Gráfico"):
-    st.components.v1.html(widget_html, height=height_stock_bubble+35)  # altura externa um pouco maior
+    st.components.v1.html(widget_html, height=height_stock_bubble+25)  # altura externa um pouco maior
 
 
 # Mostra a hora da última atualização no canto superior direito
@@ -478,6 +479,5 @@ if st.button("🧹 Limpar Cache streamlit"):
     st.cache_data.clear()       # limpa @st.cache_data
     st.cache_resource.clear()   # limpa @st.cache_resource
     st.success("Cache limpo com sucesso!")
-
 
 
